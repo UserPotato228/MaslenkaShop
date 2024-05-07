@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>Масленка : Главная страница</title>
+</head>
+<style>
+*{margin: 0;}
+#headl{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+#headl h4{
+   padding: 10px;
+}
+#headr{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   justify-content: end;
+  
+}
+#headr a{
+   padding: 10px;
+   height: 100%;
+   text-align: center; 
+}
+header{
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+}
+
+#search_bar{
+   background-color: #32AFFF;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+
+#search_bar h2{
+   color: white;
+   flex-grow: 1;
+   padding: 10px;
+}
+#search_bar form{
+   flex-grow: 3;
+}
+#search_bar a{
+   text-decoration: none;
+   color: white;
+}
+form{
+   display: flex; 
+   flex-direction: row;
+   align-items: center;
+}
+input[type="text"]{
+   width: 80%;
+   }
+input{font-size: 18px;padding: 10px;}
+
+#search_bar a{padding: 10px;}
+
+
+#conteiner{
+    display: flex;
+    flex-direction: row;
+    }
+#filter{
+    width: 20%;
+    margin: 10px 0 0 0;
+    padding: 10px;
+    border: 1px solid gray;;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+    }
+#filter select{
+    font-size: 18px;
+    padding: 5px;
+    margin: 5px 0 0 0;
+    }
+#filter input[type='submit']{
+    padding: 0px;
+    }    
+#filter div{
+    margin: 5px 0 0 0;
+    }
+#price{
+    width: 80%;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-row-gap: 20px;
+    margin: 10px 0 0px 10px;
+    flex-grow: 2;
+    border: 1px solid gray;
+    font-size: 18px;
+    padding: 10px;
+    }
+#item{
+    border: 1px solid gray;
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    align-content: center;
+    align-items: center;
+    }
+#item #img img{
+    width: 200px;
+    }
+#item #title{
+    text-align: center;
+    }
+#item #to_product{
+    
+    text-align: center;
+    color: white;
+    padding: 10px 0 10px 0;
+    width: 100%;
+    background-color: #32AFFF;
+    }
+{% set mn = 0 %}
+    {% set mx = 0 %}
+</style>
+<body>
+<header>
+   <div id="headl">
+      <h4>Адрес</h4>
+      <h4>xxxx-xxx-xx-xx</h4>
+   </div>
+   <div id="headr">
+      {% if profile %}
+        <a href="/profile/{{profile[0]}}/">Профиль</a>
+       {% else %}
+        <a href="/registration">Регистрация</a>
+        <a href="/login">Вход</a>
+       {% endif %}
+   </div>
+</header>
+
+<div id="search_bar">
+   <h2>МАСЛЕНКА</h2>
+   <form method="get" action=""><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
+   <a href="#">Заказ по VIN</a>
+</div>
+
+<div id='conteiner'>
+<form id="filter" method="get">
+    <select name="category" id='category' onchange="choice_cat()">
+        <option value="" selected disabled>Категория</option>
+        <option value="">Все</option>
+        {% for category in categories %}
+            <option value="{{category.id}}">{{category.title}}</option>
+        {% endfor %}
+    </select>
+    <select name="subcategory"  id="subcats">
+        <option value="" selected disabled>Подкатегори</option>
+        <option value="">Все</option>
+    </select>
+    <select name="sort">
+        <option value="" selected disabled>Сортировка По</option>
+        <option value="">Без сортировки</option>
+        <option value="rich">Дороговизне</option>
+        <option value="chip">Дешевизне</option>
+    </select>
+    <input type="submit" value="Найти">
+    <button type="button" onsubmit="location.href='/price'" onclick="location.href='/price'">Сбросить параметры</button>
+</form>
+
+<div id='price'>
+    {% if products is defined  %}
+        {% for product in products %}
+        {% if mn > product.cost %}
+            {% set mn = product.cost %}
+        {% endif %}
+        {% if mx < product.cost %}
+            {% set mx = product.cost %}
+        {% endif %}
+        <div id='item'>
+            <div id='img'><img src="{{url_for('static', filename='Default.png')}}"></div>
+            <div id='title'>{{product.title}}</div>
+            <div id='cost'>{{product.cost}}</div>
+            <a id='to_product' href="/price/{{product.id}}/">Перейти к товару</a>
+        </div>
+        {% endfor %}
+    {% else %}
+    <div>Пока ничего...</div>
+    {% endif %}
+</div>
+    </div>
+<script>
+    async function choice_cat(){
+        var cat_list = document.getElementById('category');
+        var value = cat_list.value;
+        
+        if(value != "")
+        {
+            document.getElementById('subcats').innerHTML = "<option value=\"\" selected disabled>Подкатегори</option><option value=\"\">Все</option>";
+            var req_info = {
+              id_cat : value  
+            };
+            var response = await fetch('/subcats',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+            });
+            var result = await response.json();
+            console.log(result);
+            result.forEach(function(dict_){
+                document.getElementById('subcats').innerHTML += "<option value="+dict_.id+">"+dict_.title+"</option>";
+            })
+        }
+        else{
+            document.getElementById('subcats').innerHTML = "<option value=\"\" selected disabled>Подкатегори</option><option value=\"\">Все</option>";
+        }
+
+    }
+</script>
+</body>
+</html>

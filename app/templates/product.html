@@ -1,0 +1,210 @@
+
+<html>
+<head>
+<title>Масленка : Главная страница</title>
+</head>
+<style>
+*{margin: 0;}
+#headl{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+#headl h4{
+   padding: 10px;
+}
+#headr{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   justify-content: end;
+}
+#headr a{
+   padding: 10px;
+   height: 100%;
+   text-align: center; 
+}
+header{
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+}
+#search_bar{
+   background-color: #32AFFF;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+
+#search_bar h2{
+   color: white;
+   flex-grow: 1;
+   padding: 10px;
+}
+#search_bar form{
+   flex-grow: 3;
+}
+#search_bar a{
+   text-decoration: none;
+   color: white;
+}
+form{
+   display: flex; 
+   flex-direction: row;
+   align-items: center;
+}
+input[type="text"]{
+   width: 80%;
+   }
+input{font-size: 18px;padding: 10px;}
+
+#search_bar a{padding: 10px;}
+
+#wrapper{
+margin: 0 auto;
+width: 70%;
+display: flex;
+flex-direction: column;
+}
+    
+#prod_head{
+display: flex;
+flex-direction: row;
+}
+
+#head_info{
+padding: 10px;
+}
+    
+#prod_img img{
+width: 200px;        
+    }
+#prod_title{
+font-size: 24px;
+font-weight: 600;
+    }
+#prod_cost{
+font-size: 18px;
+}
+#prod_amount{
+font-size: 18px;
+}
+#descr{
+font-size: 20px;
+padding: 10px;
+    }
+#prod_addcart button{
+    background-color: #32AFFF;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+}
+    
+#cart_add{
+    
+    visibility: hidden;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid gray;
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    font-size: 21px;
+    font-weight: 600;
+    }
+
+#add_bt{
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    
+    }
+    
+#add_bt button, #add_bt input{
+    margin: 5px;
+    font-size: 20px;
+    font-weight: 600;
+    background-color: #32AFFF;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+}
+ 
+
+</style>
+<body>
+<header>
+   <div id="headl">
+      <h4>Адрес</h4>
+      <h4>xxxx-xxx-xx-xx</h4>
+   </div>
+   <div id="headr">
+      {% if profile %}
+        <a href="/profile/{{profile[0]}}/">Профиль</a>
+       {% else %}
+        <a href="/registration">Регистрация</a>
+        <a href="/login">Вход</a>
+       {% endif %}
+   </div>
+</header>
+<div id="search_bar">
+   <h2>МАСЛЕНКА</h2>
+   <form method="get" method="price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
+   <a href="#">Заказ по VIN</a>
+</div>
+
+<form id="cart_add" method="post">
+    <div id="total_cost">Общая цена: {{product.cost}}</div>
+    <div id="chosed_count">Кол-во: 1</div>
+    <div id="chose_count"> <input id="chose_count_rng" name="amount" type="range" step="" min="1" max="{{product.amount}}" value="1"> </div>
+    <div id="add_bt"> <input type=submit value="Добавить"> <button id='close_win' type="button">Закрыть</button> </div>
+</form>
+    
+<div id='wrapper'>
+    <div id="prod_head">
+        <div id='prod_img'>
+            <img src="{{url_for('static', filename=product.photo_path)}}"/>
+        </div>
+        <div id='head_info'>
+            <div id="prod_title">{{product.title}}</div>
+            <div id="prod_cost">{{product.cost}} РУБ.</div>
+            <div id="prod_amount">В наличии: {{product.amount}} шт.</div>
+            {%if profile%}
+            <div id="prod_addcart"><button id='view_win' >Добавить в корзину</button></div>
+            {%endif%}
+
+        </div>
+    </div>
+    <hr>
+    <div id='descr'>
+        {{product.description}}
+    </div>
+    <hr>
+     
+</div>    
+<script>
+var cost = {{product.cost}};
+document.getElementById('view_win').onclick = function(){
+    document.getElementById('cart_add').style.visibility = 'visible';
+}    
+document.getElementById('close_win').onclick = function(){
+    document.getElementById('cart_add').style.visibility = 'hidden';
+}
+
+document.getElementById('chose_count_rng').onchange=function(){
+    document.getElementById('chosed_count').innerHTML = "Кол-во: "+document.getElementById('chose_count_rng').value
+    document.getElementById('total_cost').innerHTML = "Общая цена: "+ (document.getElementById('chose_count_rng').value * cost)
+}
+</script>    
+</body>
+</html>

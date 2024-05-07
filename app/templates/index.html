@@ -1,0 +1,205 @@
+
+<html>
+<head>
+<title>Масленка : Главная страница</title>
+</head>
+<style>
+*{margin: 0;}
+#headl{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+#headl h4{
+   padding: 10px;
+}
+#headr{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   justify-content: end;
+  
+}
+#headr a{
+   padding: 10px;
+   height: 100%;
+   text-align: center; 
+}
+header{
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+}
+
+#search_bar{
+   background-color: #32AFFF;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+
+#search_bar h2{
+   color: white;
+   flex-grow: 1;
+   padding: 10px;
+}
+#search_bar form{
+   flex-grow: 3;
+}
+#search_bar a{
+   text-decoration: none;
+   color: white;
+}
+form{
+   display: flex; 
+   flex-direction: row;
+   align-items: center;
+}
+input[type="text"]{
+   width: 80%;
+   }
+input{font-size: 18px;padding: 10px;}
+
+#search_bar a{padding: 10px;}
+
+#slider{
+background: gray;
+height: 80%;
+width: 100%;
+}
+
+#slider img{
+margin-left: auto;
+margin-right: auto;
+widht: 100%;
+height: 100%;
+}
+
+#bg_img{
+    background-image: url("{{url_for("static",filename = "oil.jpg")}}");
+background-repeat: no-repeat;
+background-size: cover;
+widht: 100%;
+height: 100%;
+}
+
+#bg_txt{
+position: absolute;
+top: 50%;
+left: 50%;
+z-index: 2;
+transform: translate(-100% , -50%);
+color: white;
+width: 30%;
+word-wrap: break-word;
+display: flex;
+flex-direction: column;
+font-size: 20px;
+justify-content: start;
+padding: 10px;
+text-shadow: 4px 3px 4px #000000;
+}
+
+#bg_txt a{
+font-size: 18px;
+background: #32AFFF;
+padding: 10px;
+border-radius: 2px;
+margin-top: 15px;	
+width:60%;
+text-align: center;
+text-shadow: 0px 0px 0px rgba(0,0,0,0);
+}
+
+#row0{
+width: 70%;
+margin: 0 auto;
+display: flex;
+height: 30%;
+font-size: 18px;
+
+justify-items: center;
+}
+
+#r0c0{
+flex-grow: 1;
+display: flex;
+flex-direction: row;
+justify-items: center;
+justify-content: center;
+align-items: center;
+font-weight: 600;
+letter-spacing: 2;
+font-size: 24px;
+}
+
+#r0c1{
+font-size: 24px;
+font-weight: 600;
+letter-spacing: 2;
+flex-grow: 3;
+display: flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+}
+footer{
+border-top: 1px solid gray;
+display: flex;
+padding: 15px;
+justify-content: center;
+}
+</style>
+<body>
+<header>
+   <div id="headl">
+      <h4>Адрес</h4>
+      <h4>xxxx-xxx-xx-xx</h4>
+   </div>
+   <div id="headr">
+       {% if profile %}
+        <a href="/profile/{{profile[0]}}/">Профиль</a>
+       {% else %}
+        <a href="registration">Регистрация</a>
+        <a href="login">Вход</a>
+       {% endif %}
+   </div>
+</header>
+
+<div id="search_bar">
+   <h2>МАСЛЕНКА</h2>
+   <form method="get" method="price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
+   <a href="#">Заказ по VIN</a>
+</div>
+
+<div id="slider">
+	<div id="bg_img"></div>
+        <div id="bg_txt">Широкий ассортимент моторных масел для отечественных и импортных автомобилей.<a href="/price">Ознакомить с каталогом</a></div>
+</div>
+
+<div id="row0">
+	<a id="r0c0" href="/price" style="background-image: url('{{url_for("static",filename="CatalogIco.png")}}'); background-size: 100% 120%; background-position: center;"><div>Общий каталог</div></a>
+        <a id="r0c1" href="/price?category=1&subcategory=1" style="background-image: url('{{ url_for("static", filename="OilsIco.png") }}'); background-size: 200%; background-position: center;"><div>Моторные масла</div></a>
+</div>
+<div id="row0">
+	<a id="r0c1" style="color: white;background-image: url('{{url_for("static", filename="VinOrderIco.png") }}'); background-position: center; background-size: cover;"><div>Заказ по VIN</div></a>
+        <a id="r0c0" style="background-image: url('{{ url_for("static", filename="TehLiqIco.png") }}'); background-position: center; background-size: cover;"><div>Тех. Жидкости</div></a>
+</div>
+<div id="row0">
+	<a id="r0c0" style="background-image: url('{{url_for( "static", filename="filtersIco.png") }}'); background-position: center; background-size: cover;"><div>Фильтра</div></a>
+        <a id="r0c0" style="background-image: url('{{url_for("static", filename="LampIco.png" )}}'); background-position: center; background-size: cover;)"><div>Лампы</div></a>
+        <a id="r0c0" style="background-image: url('{{ url_for("static", filename="AcsIco.png") }}'); background-position: center; background-size: cover;"><div>Аксессуары</div></a>
+</div>
+<footer>
+<ul>
+Контактная информация:
+<li>Улица Пушкина, дом Колотушкина</li>
+</ul>
+<ul>
+<li>+XXXX-XXX-XX-XX</li>
+<li>example324@mail.ru</li>
+</ul>
+</footer>
+</body>
+</html>

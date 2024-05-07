@@ -1,0 +1,94 @@
+<html>
+<head>
+    <title>Заказ</title>
+</head>
+<style>
+#wrapper{
+    margin-top: 10px;
+    background-color: white;
+    margin: 0 auto;
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    }
+    
+#head_info{
+    font-size: 24px;
+    font-weight: 600;
+    
+    padding: 5px;
+    }
+    
+#for_order{
+    border: 1px solid gray;
+    margin: 5px;
+    }
+    
+.order_item{
+    padding: 10px;
+    border-bottom: 1px solid black;
+    }
+    
+#bt_block{
+    padding: 5px;
+    }
+    
+#info{
+    display: flex;
+    flex-direction: row;
+    margin: 15px;
+    }
+    
+#pic{
+    width: 40%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    }
+    
+#pic img{
+    width: 80%;
+    
+    }
+    
+#txt{
+    width: 60%;
+    padding: 10px;
+    
+    font-size: 18px;
+    font-weight: 600;
+    }
+</style>
+<body>
+    <div id='wrapper'>
+        <div id='head_info'>
+        Список к заказу:
+        </div>
+        <div id='for_order'>
+            {%for item in order_items%}
+            <div class='order_item'>
+                <div>{{item['title']}}</div>
+                <div>{{item['amount']}}</div>
+                <div>{{item['cost']}}</div>
+            </div>
+            {%endfor%}
+        </div>
+        <div id='final_cost'>
+        
+        </div>
+        <div id="bt_block">
+            <button>Отмена</button>
+            <button>Отправить</button>
+        </div>
+        <div id="info">
+            <div id='pic'>
+                <img src="{{url_for('static', filename='OrderIcon.png')}}">
+            </div>
+            <div id='txt'>
+                На данный момент произвести оплату и получить заказ можно в пунке выдачи(магазине).
+            </div>
+        </div>
+    </div>
+</body>
+</html>

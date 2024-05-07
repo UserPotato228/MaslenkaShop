@@ -1,0 +1,264 @@
+<html>
+<head>
+    <title>Профиль:{{profile.fullname}}</title>
+</head>
+<style>
+    *{margin: 0;}
+    body{
+        background-color: #f0f0f0;
+    }
+#headl{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+#headl h4{
+   padding: 10px;
+}
+#headr{
+   flex-grow: 1;
+   display: flex;
+   flex-direction: row;
+   justify-content: end;
+  
+}
+#headr a{
+   padding: 10px;
+   height: 100%;
+   text-align: center; 
+}
+header{
+    background-color: white;
+   display: flex;
+   flex-direction: row;
+   width: 100%;
+}
+
+#search_bar{
+   background-color: #32AFFF;
+   display: flex;
+   flex-direction: row;
+   align-items: center;
+}
+
+#search_bar h2{
+   color: white;
+   flex-grow: 1;
+   padding: 10px;
+}
+#search_bar form{
+   flex-grow: 3;
+}
+#search_bar a{
+   text-decoration: none;
+   color: white;
+}
+form{
+   display: flex; 
+   flex-direction: row;
+   align-items: center;
+}
+input[type="text"]{
+   width: 80%;
+   }
+input{font-size: 18px;padding: 10px;}
+
+#search_bar a{padding: 10px;}
+
+#wrapper{
+background-color: white;
+margin: 0 auto;
+width: 70%;
+display: flex;
+flex-direction: column;
+}
+    
+#prof_info{
+    padding: 10px;
+    font-size: 18px;
+}
+
+#full_name{
+    font-weight: 600;
+    font-size: 24px;
+    padding: 5px;
+    }
+
+#phone_num{
+    padding: 5px;
+    }
+
+#email{
+    padding: 5px;
+    }
+    
+#cart_block{
+    font-weight: 600;
+    font-size: 26px;
+    padding: 10px;
+    }
+#buttons{
+    padding: 10px;
+    }
+#logout_bt{
+    background-color: red;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+    }
+    
+#edit_bt{
+    background-color: #32AFFF;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 16px;
+    }
+    
+#cart_item{
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 20px;
+    }
+#item_amount{
+    font-weight: 300;
+    }
+#item_cost{
+    font-weight: 300;
+    }
+    
+#delitem_bt{
+    background-color: red;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    font-size: 16px;
+    }
+</style>
+<script>
+    
+    
+    var selected_ = [];
+    
+    function delete_item(id_){
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "del");
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    let data = {id : id_};
+    let json = JSON.stringify(data);
+
+    xhr.send(json);
+
+    location.reload();
+    }
+    
+</script>
+<body>
+    <header>
+   <div id="headl">
+      <h4>Адрес</h4>
+      <h4>xxxx-xxx-xx-xx</h4>
+   </div>
+   
+</header>
+<div id="search_bar">
+   <h2>МАСЛЕНКА</h2>
+   <form method="get" method="price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
+   <a href="#">Заказ по VIN</a>
+</div>
+<div id='wrapper'>
+    <div id='prof_info'>
+        <div id='full_name'>Ф.И.О. {{profile.fullname}}</div>
+        <div id='phone_num'>Номер тел. {{profile.phone_num}}</div>
+        <div id='email'>EMail {{profile.email or "Нет"}}</div>
+    </div>
+    <div id='buttons'>
+        <button id='logout_bt' onclick='location.href="/logout";'>Выход</button>
+        <button id='edit_bt'>Редактировать</button>
+    </div>
+    <hr/>
+    <div id='cart_block'>
+        Корзина: 
+        <div id='bt_block' style="visibility: hidden;">
+            <button id='edit_bt' onclick="create_order()">Заказать выбраное</button>
+            <button id='delitem_bt' onclick="delete_items()">Удалить выбраное</button>
+        </div>
+        
+        <div id='cart_cap' id='cart_cap'>
+            {%if cart%}
+            {%for item in cart%}
+            <div id='cart_item'>
+                <input type="checkbox" id='cart_item_checkbox' name='cart_item' value="{{item['id']}}">
+                <div id='item_title'>{{item['title']}}</div>
+                <div id='item_amount'>Кол-во: {{item['amount']}} шт.</div>
+                <div id='item_cost'>Стоимость: {{item['cost']}} РУБ</div>
+                <div>
+                    <button id='delitem_bt' onclick="delete_item({{item['id']}})">Удалить</button>
+                    <button id='edit_bt' onclick="create_order({{item['id']}})">Заказать</button>
+                </div>
+            </div>
+            {%endfor%}
+            {%else%}
+            <div id='cart_item'>
+                Пусто.. <a href='/price'>Перейти к покупкам</a>
+            </div>
+            {%endif%}
+            
+        </div>
+    </div>
+</div>
+<script>
+    function create_order(item_id){
+        item_id = typeof item_id !== 'undefined' ? item_id : null;
+        var json_string = "";
+        var json = [];
+        if(item_id==null){
+            alert('first');
+            for(var i = 0;i<selected_.length;i++){
+                json.push({id:selected_[i]});
+            }
+            json_string = JSON.stringify(json);
+            
+        }
+        else{
+            alert('secodn');
+            json_string = JSON.stringify([{id:item_id}]);
+        }
+        location.href=encodeURI('/order?items='+json_string);
+    }
+    
+    function delete_items(){
+        for(var i = 0; i < selected_; i++){
+            delete_item(selected_[i]);
+        }
+    }
+    
+    document.getElementById('cart_cap').onchange = function(){
+    var elemnts_ = document.getElementsByName('cart_item');
+    selected_ = [];
+    
+    for (var i = 0; i < elemnts_.length; i++){
+       if(elemnts_[i].checked){
+           selected_.push(elemnts_[i].value);
+       }
+    }
+        
+    if(selected_.length==0){
+        document.getElementById('bt_block').style.visibility = 'hidden';
+    }
+    else{
+        document.getElementById('bt_block').style.visibility = 'visible';
+    }
+    }
+</script>
+</body>
+</html>
