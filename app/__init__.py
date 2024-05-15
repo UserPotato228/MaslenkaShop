@@ -37,6 +37,8 @@ def create_app(config_class=Config):
 	app.register_blueprint(profile_bp)
 	from app.order import bp as order_bp
 	app.register_blueprint(order_bp)
+	from app.admin import bp as admin_bp
+	app.register_blueprint(admin_bp)
 
 	# on 404 error handler
 	@app.errorhandler(404)

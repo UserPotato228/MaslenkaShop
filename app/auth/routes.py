@@ -21,7 +21,7 @@ def login():
         password = request.form.get("password", None)
         if not login or not password:
             return redirect_with_message("Все поля должны быть заполнены!", "/login")
-        profiles = db.session.query(Profile).filter((Profile.login == login)|(Profile.password == password)).all()
+        profiles = db.session.query(Profile).filter(Profile.login == login,Profile.password == password).all()
         if len(profiles):
             session['login'] = login
             session['password'] = password

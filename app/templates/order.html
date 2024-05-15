@@ -60,6 +60,7 @@
     font-weight: 600;
     }
 </style>
+
 <body>
     <div id='wrapper'>
         <div id='head_info'>
@@ -74,12 +75,12 @@
             </div>
             {%endfor%}
         </div>
-        <div id='final_cost'>
-        
+        <div id='final_cost' style="padding: 5px; font-size: 20px; font-weight: 600;">
+        Итоговая цена: {{total_cost}}
         </div>
         <div id="bt_block">
             <button>Отмена</button>
-            <button>Отправить</button>
+            <button onclick="send_order()">Отправить</button>
         </div>
         <div id="info">
             <div id='pic'>
@@ -91,4 +92,23 @@
         </div>
     </div>
 </body>
+<script defer>
+    const urlParams = new URLSearchParams(window.location.search);
+    const items = urlParams.get('items');
+    // console.log(items);
+    const hidden_form = document.createElement('form');
+    hidden_form.method='post';
+    hidden_form.action='/order'
+    const hidden_inp = document.createElement('input');
+    hidden_inp.type='hidden';
+    hidden_inp.name='items';
+    hidden_inp.value = items;
+    hidden_form.appendChild(hidden_inp);
+    document.body.appendChild(hidden_form);
+
+    function send_order(){
+        hidden_form.submit();
+    }
+
+</script>
 </html>

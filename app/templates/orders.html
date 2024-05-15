@@ -1,0 +1,108 @@
+<html>
+<head>
+    <title></title>
+</head>
+<style>
+    #wrapper{
+        width: 60%;
+        margin: 0 auto;
+    }
+    #orders{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .item{
+        width: 90%;
+        border: 1px solid black;
+        
+        padding: 5px;
+    }
+    .info{
+        
+    }
+    
+    .order_items{
+        border: 1px solid black;
+    }
+</style>
+<body>
+    <div id="wrapper">
+        <div><h1>Заказы</h1></div>
+        <hr>
+        <div id="orders">
+            {% for order in orders %}
+            <div class="item">
+                
+                <div class='order_num'>ORDER NUM : {{ order['id'] }}</div>
+                <div class='total_sum'>{{ order['total'] }} rub.</div>
+                <div>STATUS: {{order['status']}}</div>
+                {%if order['status'] == "В процессе" %}
+                <div class="btns"><button onclick="make_done({{order['id']}})">Готово</button></div>
+                {%else%}
+                <div class="btns"><button onclick="issue_an_order({{order['id']}})">Выдать</button></div>
+                {%endif%}
+                <div class="list_head">Детали:</div>
+                <div class="order_items">
+                    {% for product in order['records'] %}
+                    <div id="order_item">
+                        <div>{{product['title']}}</div>
+                        <div>{{product['amount']}}</div>
+                        <div>{{product['cost']}}</div>
+                    </div>
+                    {%  endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+<script>
+    async function make_done(id){
+        
+        var form_data = new FormData();
+        form_data.append('id', id);
+        
+            let response = await fetch('/admin/orders/set_done', {
+      method: 'POST',
+      body: form_data
+    });
+    
+    if(response.ok){
+        var text = await response.text();
+        console.log(text);
+        if(text == "OK")
+            {
+                alert("Заказ №"+id+" готов к выдаче.");
+            }   
+    }
+    else{
+        alert("Ошибка :/")
+    }
+    }    
+    
+    async function issue_an_order(id){
+        
+        var form_data = new FormData();
+        form_data.append('id', id);
+        
+            let response = await fetch('/admin/orders/delete', {
+      method: 'POST',
+      body: form_data
+    });
+    
+    if(response.ok){
+        var text = await response.text();
+        console.log(text);
+        if(text == "OK")
+            {
+                alert("Заказ №"+id+" выдан.");
+            }   
+    }
+    else{
+        alert("Ошибка :/")
+    }
+    }    
+</script>
+</html>

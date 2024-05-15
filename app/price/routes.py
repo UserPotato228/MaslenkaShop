@@ -119,3 +119,56 @@ def subcats():
     for i in subcats_:
         subcats_array.append(object_as_dict(i))
     return jsonify(subcats_array)
+
+
+@bp.route('/products', methods=["GET", "POST"])
+def products():
+    data = json.loads(request.data)
+    print(data)
+    id_cat_ = data.get("id_cat", None) or None
+    id_subcat_ = data.get("id_subcat", None) or None
+
+
+    query = "SELECT * FROM product"
+
+    if id_cat_ and id_subcat_:
+        print('first')
+        query = f"SELECT id, title FROM product WHERE cat_id = {id_cat_} AND subcat_id = {id_subcat_}"
+    elif id_cat_ and not id_subcat_:
+        print('second')
+        query = f"SELECT id, title FROM product WHERE cat_id = {id_cat_}"
+    else:
+        print('end')
+        query = "SELECT id, title FROM product"
+
+    query = text(query)
+    result = db.session.execute(query)
+    print(result)
+
+    products_array = []
+    for i in result:
+        print(i)
+        products_array.append({"id": i[0], "title": i[1]})
+    print(products_array)
+    return jsonify(products_array)
+
+
+@bp.route('/product', methods=['POST'])
+def get_product():
+    data = json.loads(request.data)
+    print(data)
+    id_prod = data.get("id", None) or None
+
+    product = db.session.query(Product).filter(Product.id == id_prod).first()
+
+    return jsonify(object_as_dict(product))
+
+@bp.route('/product_by_art', methods=['POST'])
+def get_product_by_art():
+    data = json.loads(request.data)
+    print(data)
+    id_prod = data.get("art", None) or None
+
+    product = db.session.query(Product).filter(Product.article == id_prod).first()
+
+    return jsonify(object_as_dict(product))

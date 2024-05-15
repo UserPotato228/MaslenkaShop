@@ -8,8 +8,9 @@ class Product(db.Model):
     cost = db.Column(db.Integer)
     amount = db.Column(db.Integer)
     cat_id = db.Column(db.Integer)
-    subcat_id = db.column(db.Integer)
+    subcat_id = db.Column(db.Integer)
     photo_path = db.Column(db.String(150), default="Default.png")
+    article = db.Column(db.String(50))
 
 
 

@@ -7,6 +7,8 @@ from app.extensions import db
 from app.models.profile import Profile
 from app.models.cart import Cart
 from app.models.product import Product
+from app.models.order_record import Order_Record
+from app.models.orders import Orders
 
 
 @bp.route("/profile/<int:id_>/")
@@ -27,7 +29,10 @@ def profile(id_):
             cart_items.append({'id':item.id, 'title':cart_item.title, 'amount':item.amount, 'cost':item.amount*cart_item.cost})
     print(cart_items)
 
-    return render_template('profile.html', profile=profile_, cart=cart_items)
+    orders_ = db.session.query(Orders).filter(Orders.user_id == id_).all() or None
+
+
+    return render_template('profile.html', profile=profile_, cart=cart_items, orders = orders_)
 
 
 @bp.route('/profile/<int:id_>/del', methods=['POST'])

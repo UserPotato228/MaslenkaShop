@@ -215,6 +215,27 @@ flex-direction: column;
             
         </div>
     </div>
+    <div id="cart_block">
+        Заказы:
+        <div id='cart_cap'>
+             {%if orders%}
+            {%for item in orders%}
+            <div id='cart_item'>
+                <div id='item_title'>Номер заказа: {{item.id}}</div>
+                <div id='item_title'>Статус: {{item.status}}</div>
+                <div>
+                    <button id='delitem_bt' onclick="delete_item({{item['id']}})">Удалить</button>
+                    <button id='edit_bt' onclick="create_order({{item['id']}})">Перейти к заказу</button>
+                </div>
+            </div>
+            {%endfor%}
+            {%else%}
+            <div id='cart_item'>
+                Пусто..
+            </div>
+            {%endif%}
+        </div>
+    </div>
 </div>
 <script>
     function create_order(item_id){

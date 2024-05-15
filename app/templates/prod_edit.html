@@ -1,0 +1,407 @@
+<html>
+<head>
+    <title>Редактирование товаров</title>
+</head>
+<style>
+    #wrapper{
+        width: 60%;
+        
+        margin: 0 auto;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        border: solid black 1px;        
+    }
+    
+    #search_bar{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-content: stretch;
+    } 
+    #search_bar input{
+        padding: 5px;
+        margin: 1px;
+    }
+    #search_bar input[type='text']{
+        width: 80%;
+    }
+     #search_bar input[type='button']{
+        width: 20%;
+    }
+    
+    #cats{
+        display: flex;
+        flex-direction: row;
+        
+        
+        margin: 1px;
+        width: 100%;
+    }
+    #cats select{
+        width: 50%;
+        padding: 5px;
+        margin: 1px;
+    }
+    
+    #prod_info{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-content: stretch;
+    }
+    
+    #pdinf_left{
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+    }
+    #pdinf_right{
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-content: stretch;
+    }
+    
+    #title{
+        width: 100%;
+        
+    }
+    #title input{
+        width: 100%;
+    }
+    
+    #desc{
+        width: 100%;
+    }
+    #desc textarea{
+        width: 100%;
+    }
+    
+    #cst_n_amnt{
+        padding: 1px;
+        width: 100%;
+    }
+    #cst_n_amnt input{
+        width: 50%;
+    }
+    
+    #img_block{
+        display: flex;
+        flex-direction: column;
+        justify-items: center;
+        
+        padding: 5px;
+        
+    }
+    #img_block img{
+        margin: 5px;
+        width: 80%;
+        border: 1px solid black;
+        margin: 0 auto;
+    }
+    
+    input{
+        padding: 5px;
+    }
+    
+    #btns{
+     display: flex;
+     flex-direction: row;
+        padding: 1px;
+    }
+    button{
+        width: 50%;
+        padding: 5px;
+    }
+    
+    #products{
+        width: 100%;
+         margin: 1px;
+    }
+    
+    #products #product{
+        width: 100%;
+        padding: 5px;
+       
+    }
+</style>
+<body>
+    <div id="wrapper">
+        <div id="search_bar">
+            <input type="text" name="search"><input type="button" value="Найти">
+        </div>
+        <div id="cats">
+            <select id="cats_sel" onchange="choice_cat()">
+                <option selected disabled>Категория</option>
+                {%for cat in categories%}
+                    <option value="{{cat.id}}">{{cat.title}}</option>
+                {%endfor%}
+            </select>
+            <select id="subcats_sel" onchange="get_products()">
+                <option selected disabled>Подкатегория</option>
+            </select>
+        </div>
+        <div id="products">
+            <select id="product" onchange="get_product()">
+                <option selected disabled>Товары</option>
+            </select>
+        </div>
+        <div id="prod_info">
+            
+            <div id="pdinf_left">
+                <div id="img_block">
+                    <input type="file" name="file_to_upload" id="img_sel" onchange="change_img(event)">
+                    <img id="img_prod" src="{{url_for('static', filename='Default.png')}}">
+                </div>    
+            </div>
+            
+            <div id="pdinf_right">
+                <label><input type="checkbox" id="chckbx" onchange="check_new()">Новый товар</label>
+                <div id="article">
+                    <input style="width: 100%;" id="article_inp" type="text" placeholder="Артикул">
+                </div>
+                <div id="title">
+                    <input id="title_inp" type="text" placeholder="Заголовок*">
+                </div>
+                <div id="desc">
+                    <textarea id="desc_ta" rows="10" placeholder="Описание"></textarea>
+                </div>
+                <div id="cst_n_amnt">
+                    <input id="cst_inp" type="text" placeholder="Стоимость*"><input id="amnt_inp" type="text" placeholder="Количество*">
+                </div>   
+                <div id="btns">
+                    <button onclick="check_method()">Добавить/Обновить</button> <button>Удалить</button>
+                </div>
+            </div>
+            
+        </div>
+        
+        
+    </div>
+
+</body>
+    <script>
+    async function add_product(){
+        var prod_img = document.getElementById('img_sel').files[0];
+        //var product = document.getElementById('product');
+        var cat_list = document.getElementById('cats_sel');
+        var subcat_list = document.getElementById('subcats_sel');
+        var article = document.getElementById('article_inp');
+        var title = document.getElementById('title_inp');
+        var desc = document.getElementById('desc_ta');
+        var cost = document.getElementById('cst_inp');
+        var amount = document.getElementById('amnt_inp');
+        var img = document.getElementById("img_prod");
+        
+        var form_data = new FormData();
+        
+        form_data.append('article', article.value);
+        form_data.append('title', title.value);
+        form_data.append('desc', desc.value);
+        form_data.append('cost', cost.value);
+        form_data.append('amount', amount.value);
+        form_data.append('cat', cat_list.value);
+        form_data.append('subcat', subcat_list.value);
+        form_data.append('file_to_upload', prod_img);
+        
+        let response = await fetch('/admin/add', {
+      method: 'POST',
+      body: form_data
+    });
+    
+    if(response.ok){
+        var text = await response.text();
+        console.log(text);
+        if(text == "OK")
+            {
+                alert("Товар добавлен");
+            }
+        if(text == "NAFF")
+            {
+                alert("Не все нужные поля заполнены")    
+            }
+    }
+    else{
+        alert("Ошибка :/")
+    }
+        
+    }
+        
+    async function update_product(){
+        var product_ = document.getElementById('product')
+        var prod_img = document.getElementById('img_sel').files[0];
+        //var product = document.getElementById('product');
+        var cat_list = document.getElementById('cats_sel');
+        var subcat_list = document.getElementById('subcats_sel');
+        var article = document.getElementById('article_inp');
+        var title = document.getElementById('title_inp');
+        var desc = document.getElementById('desc_ta');
+        var cost = document.getElementById('cst_inp');
+        var amount = document.getElementById('amnt_inp');
+        var img = document.getElementById("img_prod");
+        
+        var form_data = new FormData();
+        
+        form_data.append('id', product_.value);
+        form_data.append('article', article.value);
+        form_data.append('title', title.value);
+        form_data.append('desc', desc.value);
+        form_data.append('cost', cost.value);
+        form_data.append('amount', amount.value);
+        form_data.append('cat', cat_list.value);
+        form_data.append('subcat', subcat_list.value);
+        form_data.append('file_to_upload', prod_img);
+        
+        let response = await fetch('/admin/update', {
+      method: 'POST',
+      body: form_data
+    });
+    
+    if(response.ok){
+        var text = await response.text();
+        console.log(text);
+        if(text == "OK")
+            {
+                alert("Товар обновлен");
+            }
+        if(text == "NAFF")
+            {
+                alert("Не все нужные поля заполнены")    
+            }
+    }
+    else{
+        alert("Ошибка :/")
+    }
+        
+    }
+        
+    function check_method(){
+        if(document.getElementById('chckbx').checked){
+            add_product();
+        }
+        else{
+            update_product();
+        }
+    } 
+    
+    function check_new(){
+        var box = document.getElementById('chckbx');
+        var prod_sel = document.getElementById('product');
+        prod_sel.disabled = box.checked;
+        
+    }
+    async function choice_cat(){
+        var cat_list = document.getElementById('cats_sel');
+        var value = cat_list.value;
+        
+        if(value != "")
+        {
+            document.getElementById('subcats_sel').innerHTML = "<option value=\"\" selected disabled>Подкатегория</option><option value=\"\">Все</option>";
+            var req_info = {
+              id_cat : value  
+            };
+            var response = await fetch('/subcats',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+            });
+            var result = await response.json();
+            console.log(result);
+            result.forEach(function(dict_){
+                document.getElementById('subcats_sel').innerHTML += "<option value="+dict_.id+">"+dict_.title+"</option>";
+            })
+        }
+        else{
+            document.getElementById('subcats_sel').innerHTML = "<option value=\"\" selected disabled>Подкатегория</option><option value=\"\">Все</option>";
+        }
+        get_products();
+    }
+        
+    async function get_products(){
+        var cat_list_value = document.getElementById('cats_sel').value;
+        var subcat_list_value = document.getElementById('subcats_sel').value;
+        console.log("cat "+cat_list_value+"; sub "+subcat_list_value);
+        var products = document.getElementById('product');
+        if(cat_list_value != ''){
+            // make empty products select
+            product.innerHTML = "<option value=\"\" selected disabled>Товары</option>";
+            // prepare request info
+            var req_info = {
+                id_cat : cat_list_value,
+                id_subcat : subcat_list_value
+            }
+            // send request
+            var response = await fetch('/products',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+            });
+            // get result
+            var result = await response.json();
+            console.log(result);
+            // foreach result
+            result.forEach(function(dict_){
+                document.getElementById('product').innerHTML += "<option value="+dict_.id+">"+dict_.title+"</option>";
+            })
+        }
+    }
+        
+    async function get_product(){
+        var product = document.getElementById('product');
+        var title = document.getElementById('title_inp');
+        var desc = document.getElementById('desc_ta');
+        var cost = document.getElementById('cst_inp');
+        var amount = document.getElementById('amnt_inp');
+        var img = document.getElementById("img_prod");
+        var article = document.getElementById("article_inp");
+        
+        if(product.value!="")
+            {
+                var req_info = {
+                    id : product.value
+                };
+                
+                var response = await fetch('/product',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+                });
+                // get result
+                var result = await response.json();
+                // set values
+                title.value = result.title;
+                desc.value = result.description;
+                cost.value = result.cost;
+                amount.value = result.amount;
+                img.src = "/static/"+result.photo_path;
+                article.value = result.article;
+            }
+    }
+        
+    function change_img(event){
+        
+    var selectedFile = event.target.files[0];
+    var reader = new FileReader();
+
+    var imgtag = document.getElementById("img_prod");
+    imgtag.title = selectedFile.name;
+
+    reader.onload = function(event) {
+        imgtag.src = event.target.result;
+    };
+
+    reader.readAsDataURL(selectedFile);
+
+    }
+</script>
+</html>

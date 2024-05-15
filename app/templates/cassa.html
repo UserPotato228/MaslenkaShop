@@ -1,0 +1,163 @@
+<html>
+<head>
+    <title></title>
+</head>
+<style>
+    #wrapper{
+        width: 60%;
+        margin: 0 auto;
+        
+        display: flex;
+        flex-direction: column;
+    }
+    #block{
+        display: flex;
+        flex-direction: row;
+    }
+    #left{
+        width: 60%;
+    }
+    #search_bar{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+    #search_bar input[type="text"]{
+        width: 80%;
+        padding: 5px;
+    }
+    #search_bar input[type="button"]{
+        width: 20%;
+        padding: 5px;
+    }
+    #left select{
+        width: 100%;
+    }
+    #left option{
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    #right{
+        border: 1px solid black;
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+    }
+    #total{
+        padding: 5px;
+        font-size: 28px;
+        font-weight: 600;
+    }
+    #right label{
+        font-size: 24px;
+    }
+    
+    #change{
+        font-size: 22px;
+    }
+    
+    #sell{
+        flex: 1; 
+        background-color: gray;
+        display: flex;
+        flex-direction: column;
+        
+        justify-content: flex-end;
+
+    }
+    #change_inp{
+        width: 100%;
+        font-size: 22px;
+    }
+    #sell input{
+        font-size: 22px;
+        padding: 5px;
+        width: 100%;
+    }
+    
+    #bottom_block{
+        display: flex;
+        flex-direction: row;
+        width: 60%;
+    }
+    #bottom_block input{
+        width: 50%;
+    }
+    #bottom_block input[type="button"]{
+        font-size: 22px;    
+        border-left: 3px solid black;
+    }
+    #amount{
+        font-size: 22px;
+    }
+    
+    
+    
+    
+</style>
+<script>
+var products = [];
+</script>
+<body>
+    <div id="wrapper">
+        <div id="block">
+        <div id="left">
+            <div id='search_bar'>
+                <input id="article" type="text">
+                <input onclick="get_product()" type=button value="Добавить">
+            </div>
+            <select size="15">
+                <option disabled>Внесенные товары</option>
+            </select>
+        </div>
+        <div id="right">
+            <div id="total">Итого: 0000</div>
+            <label><input type='checkbox'>Наличные</label>
+            <label><input type='checkbox'>Безнал.</label>
+            
+            <input id="change_inp" type='text' placeholder="Наличные">
+            <div id="change">Сдача: 0000</div>
+            <div id="sell">
+                <input type="button" value="Пробить">
+            </div>
+        </div>
+            
+            </div>
+        <div id="bottom_block">
+            <input id="amount" placeholder="Количество в поз.">
+            <input type="button" value="Удалить поз.">
+        </div>
+    </div>    
+</body>
+<script>
+    async function get_product(){
+        
+        var article = document.getElementById("article");
+        
+        if(article.value!="")
+            {
+                var req_info = {
+                    art : article.value
+                };
+                
+                var response = await fetch('/product_by_art',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+                });
+                // get result
+                var result = await response.json();
+                result.curr_amount=1;
+                // set values
+                products.push(result);
+            }
+        refresh_product();
+    }
+    function refresh_product(){
+       console.log(products);
+    }
+</script>
+</html>
