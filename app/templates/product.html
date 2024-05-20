@@ -1,10 +1,13 @@
 
 <html>
 <head>
-<title>Масленка : Главная страница</title>
+<title>Масленка : {{product.title}} за {{product.cost}} рублей</title>
 </head>
 <style>
 *{margin: 0;}
+    body{
+        background-color: #f0f0f0;
+    }
 #headl{
    flex-grow: 1;
    display: flex;
@@ -62,10 +65,12 @@ input{font-size: 18px;padding: 10px;}
 #search_bar a{padding: 10px;}
 
 #wrapper{
+
 margin: 0 auto;
 width: 70%;
 display: flex;
 flex-direction: column;
+background-color: white;
 }
     
 #prod_head{
@@ -77,20 +82,29 @@ flex-direction: row;
 padding: 10px;
 }
     
+#prod_img{
+    width: 40%;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 2px 3px 13px -11px rgba(0,0,0,0.75);
+    }
+    
 #prod_img img{
-width: 200px;        
+width: 100%;        
     }
 #prod_title{
+    font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Helvetica, roboto, arial;
+font-weight: 700;
+letter-spacing: .4px;
+line-height: 30px;
 font-size: 24px;
 font-weight: 600;
     }
-#prod_cost{
-font-size: 18px;
-}
 #prod_amount{
 font-size: 18px;
 }
 #descr{
+height: 100%;
 font-size: 20px;
 padding: 10px;
     }
@@ -139,8 +153,24 @@ padding: 10px;
     padding: 5px;
     font-size: 16px;
 }
- 
-
+    #prod_cost{
+        display: flex;
+        flex-direction: row;
+        align-content: space-between;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 20px;
+        
+        border-radius: 5px;
+        
+        padding: 5px 10px 5px 10px;
+        margin: 7px;
+        box-shadow: 2px 3px 13px -5px rgba(0,0,0,0.75);
+    }
+    #headr a{
+        color: black;
+        text-decoration: none;
+    }
 </style>
 <body>
 <header>
@@ -160,7 +190,7 @@ padding: 10px;
 <div id="search_bar">
    <h2>МАСЛЕНКА</h2>
    <form method="get" method="price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
-   <a href="#">Заказ по VIN</a>
+   <a href="/vin">Заказ по VIN</a>
 </div>
 
 <form id="cart_add" method="post">
@@ -173,15 +203,19 @@ padding: 10px;
 <div id='wrapper'>
     <div id="prod_head">
         <div id='prod_img'>
-            <img src="{{url_for('static', filename=product.photo_path)}}"/>
+            <img src="{{url_for('static', filename=product.photo_path)}}" onclick="window.open(this.src)"/>
         </div>
         <div id='head_info'>
             <div id="prod_title">{{product.title}}</div>
-            <div id="prod_cost">{{product.cost}} РУБ.</div>
+            {%if product.article%}
+            <div id="prod_title">Арт.{{product.article}}</div>
             <div id="prod_amount">В наличии: {{product.amount}} шт.</div>
-            {%if profile%}
-            <div id="prod_addcart"><button id='view_win' >Добавить в корзину</button></div>
             {%endif%}
+            <div id="prod_cost">{{product.cost}} &#8381 {%if profile%}
+            <div id="prod_addcart"><button id='view_win' >Добавить в корзину</button></div>
+            {%endif%}</div>
+            
+            
 
         </div>
     </div>

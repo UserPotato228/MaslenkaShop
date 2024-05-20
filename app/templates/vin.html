@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title></title>
+</head>
+<style>
+    #wrapper{
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        
+        height: 40%;
+        width: 40%;
+        
+    }
+    #wrapper input{
+        font-size: 22px;
+        
+        width: 100%;
+        padding: 3px;
+    }
+    
+    #vin_bar{
+        display: flex;
+        flex-direction: row;
+    }
+    #vin_bar input[type="submit"]{
+        width: 30%;
+    }
+    form textarea{
+        font-size: 20px;
+        width: 100%;
+        padding: 3px;
+    }
+</style>
+<body onload="alert('VIN/Идентификационный номер можно найти на свидетельстве о регистрации, под капотом, в специальном окошке на лобовом стекле, на стойке водительской двери, в багажнике под запасным колесом или под обшивкой пола около водительского сидения.');">
+    <div id="wrapper">
+        <form method="post">
+            <div id="vin_bar"><input name="vin" type='text' name='vin' placeholder='VIN'><input type="submit" value="Отправить"></div>
+            <textarea name="message" placeholder="Сообщение" rows="15"></textarea>
+            
+        </form>
+    </div>
+</body>
+</html>

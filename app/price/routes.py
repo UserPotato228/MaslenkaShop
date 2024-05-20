@@ -4,7 +4,7 @@ from sqlalchemy import inspect, func, text
 from app.models.profile import Profile
 from app.price import bp
 # flask modules
-from flask import render_template, request, jsonify, session
+from flask import render_template, request, jsonify, session, make_response
 # import db
 from app.models.product import Product
 from app.models.category import Category
@@ -163,12 +163,15 @@ def get_product():
 
     return jsonify(object_as_dict(product))
 
+
 @bp.route('/product_by_art', methods=['POST'])
 def get_product_by_art():
     data = json.loads(request.data)
     print(data)
     id_prod = data.get("art", None) or None
 
-    product = db.session.query(Product).filter(Product.article == id_prod).first()
-
-    return jsonify(object_as_dict(product))
+    product = db.session.query(Product).filter(Product.article == id_prod).first() or None
+    if product:
+        return jsonify(object_as_dict(product))
+    else:
+        return make_response("Не найдено", 400)

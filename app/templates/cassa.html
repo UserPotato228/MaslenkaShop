@@ -107,30 +107,119 @@ var products = [];
                 <input id="article" type="text">
                 <input onclick="get_product()" type=button value="Добавить">
             </div>
-            <select size="15">
+            <select id="products_list" size="15" onchange="select_product()">
                 <option disabled>Внесенные товары</option>
             </select>
         </div>
         <div id="right">
             <div id="total">Итого: 0000</div>
-            <label><input type='checkbox'>Наличные</label>
-            <label><input type='checkbox'>Безнал.</label>
+            <label><input name="cash_n_el" type='radio' value="Наличные" checked>Наличные</label>
+            <label><input name="cash_n_el" type='radio' value="Безнал">Безнал.</label>
             
-            <input id="change_inp" type='text' placeholder="Наличные">
+            <input id="change_inp" type='text' placeholder="Наличные" onchange="change_change()">
             <div id="change">Сдача: 0000</div>
             <div id="sell">
-                <input type="button" value="Пробить">
+                <input onclick="sell()" type="button" value="Пробить">
             </div>
         </div>
             
             </div>
         <div id="bottom_block">
-            <input id="amount" placeholder="Количество в поз.">
-            <input type="button" value="Удалить поз.">
+            <input id="amount" placeholder="Количество в поз." onchange="change_amount()">
+            <input type="button" value="Удалить поз." onclick="delete_item()">
         </div>
     </div>    
 </body>
 <script>
+    async function sell(){
+        if(products.length != 0){
+        var req_info = {
+                    ct : document.querySelector('input[name="cash_n_el"]:checked').value,
+                    product_s : products 
+                };
+                
+                var response = await fetch('/take_check',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+                });
+                // get result
+                
+                if (response.ok) { 
+                    var result = await response.json();
+                    window.open("/check/"+result.id+"/"); 
+                }
+            
+                    }
+    }
+    
+    function change_change(){
+        let cash = document.getElementById('change_inp').value;
+        console.log(cash);
+        let total = Math.round(document.getElementById('total').innerHTML.split(' ')[1]);
+        console.log(total);
+        if(!isNaN(cash)){
+            if((cash-total) >= 0) {document.getElementById('change').innerHTML = "Сдача: "+(cash-total);}
+        
+    }}
+    
+    function change_amount(){
+        let select_item = document.getElementById('products_list').value; 
+        let amount = document.getElementById('amount').value;
+        if(!isNaN(amount)){
+            for(let i = 0; i < products.length; i++){
+                if(select_item == products[i].id){
+                    if(products[i].amount < amount){
+                        console.log(1);
+                        products[i].curr_amount = products[i].amount;
+                        document.getElementById('amount').value = products[i].amount;
+                       }
+                    else{
+                        console.log(2);
+                        products[i].curr_amount = amount;
+                    }
+                }
+            }    
+        }
+        refresh_product();
+    }
+    
+    function select_product(){
+        let select_item = document.getElementById('products_list').value;
+        for(let i = 0; i < products.length; i++){
+            document.getElementById('amount').value = products[i].curr_amount;
+            break;
+        }
+    }
+    
+    function refresh_product(){
+        let total = 0
+        document.getElementById('products_list').innerHTML = "<option disabled>Внесенные товары</option>";
+       products.forEach(function(item){
+                         document.getElementById('products_list').innerHTML += "<option value="+item.id+">"+item.title+"; Кол-во: "+item.curr_amount+"</option>";
+                         total += item.curr_amount * item.cost;
+                         });
+        document.getElementById('total').innerHTML = "Итого: "+total;
+    }
+    
+    function delete_item(){
+        let sel_item = document.getElementById('products_list').value;
+        products = products.filter((item) => item.id === sel_item);
+        console.log(products);
+        refresh_product();
+    }
+    
+    function contains(obj) {
+        for (var i = 0; i < products.length; i++) {
+            if (products[i].id === obj) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
     async function get_product(){
         
         var article = document.getElementById("article");
@@ -149,15 +238,31 @@ var products = [];
                 body: JSON.stringify(req_info)
                 });
                 // get result
+                
+                if (response.ok) { 
                 var result = await response.json();
-                result.curr_amount=1;
-                // set values
-                products.push(result);
+                if(contains(result.id))
+                    {
+                        for(var i = 0; i < products.length; i++){
+                            if(products[i].curr_amount < products[i].amount){
+                                products[i].curr_amount += 1;
+                            }
+                        }
+                    }
+                else{
+                    result.curr_amount=1;
+                    // set values
+                
+                    products.push(result);    
+                }}
+                else{
+                    var result = await response.text();
+                    alert("Ошибка: " + result);
+                }
+                
             }
         refresh_product();
     }
-    function refresh_product(){
-       console.log(products);
-    }
+    
 </script>
 </html>

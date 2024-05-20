@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title></title>
+    </head>
+    <style>
+        #wrapper{
+            width: 50%;
+            margin: 0 auto;
+            
+            display: flex;
+            flex-direction: column;
+             background: #32AFFF;
+            border: 1px solid #32AFFF;
+            border-radius: 5px;
+        }
+        #wrapper h1{
+            color: white;
+            width: 100%;
+            margin: 5px;
+        }
+        
+        #container{
+            border: 1px solid black;
+            margin: 5px;
+            border-radius: 5px;
+             background: #FFF;
+            
+           
+        }
+        
+        #item{
+            font-size: 20px;
+            border-bottom: 1px solid black;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        #item button{
+            color: white;
+            background: #32AFFF;
+            border: 0;
+            padding: 5px;
+            border-radius: 5px;
+            font-size: 18px;
+            margin: 5px;
+        }
+    </style>
+    <body>
+        <div id="wrapper">
+            <h1>Заказы по VIN</h1>
+            <div id="container">
+                {%for rec in recs%}
+                <div id="item">
+                    <div>{{rec['phone_num']}}</div>
+                    {%if rec['email']%}
+                        <div>{{rec['email']}}</div>
+                    {%endif%}
+                    <div>{{rec['vin']}}</div>
+              
+                    <div>{{rec['message']}}</div>
+              
+                    <div><button onclick='set_done({{rec["id"]}})'>Готово</button></div>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+    </body>
+    <script>
+    function set_done(id){
+                var req_info = {
+                    id : id                    
+                };
+                
+                var response = await fetch('/take_check',{
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(req_info)
+                });
+                // get result
+                location.reload();
+    }
+    </script>
+</html>

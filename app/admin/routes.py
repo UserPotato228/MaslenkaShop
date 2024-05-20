@@ -10,6 +10,8 @@ from app.models.category import Category
 from app.models.product import Product
 from app.models.orders import Orders
 from app.models.order_record import Order_Record
+from app.models.vin_order import Vin_order
+from app.models.profile import Profile
 
 def check_host(rm_host):
     file = open(os.path.join(config.base_dir,"counts.json"), "r")
@@ -219,3 +221,15 @@ def update_product():
 
     db.session.commit()
     return make_response("OK", 200)
+
+@bp.route('/admin/vins')
+def vins():
+    if request.method == "GET":
+        vin_recs = db.session.query(Vin_order).all()
+        recs=[]
+        for rec in vin_recs:
+            user = db.session.query(Profile).filter(Profile.id==rec.user_id).first()
+            recs.append({"id":rec.id, "phone_num":user.phone_num or None, "email":user.email or None, "vin":rec.vin, "message":rec.message})
+        return render_template("vins.html", recs = recs)
+    else:
+        pass

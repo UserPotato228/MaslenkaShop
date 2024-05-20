@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Масленка : Главная страница</title>
+<title>Масленка : Каталог</title>
 </head>
 <style>
 *{margin: 0;}
@@ -79,6 +79,7 @@ input{font-size: 18px;padding: 10px;}
     flex-grow: 1;
     }
 #filter select{
+    width: 100%;
     font-size: 18px;
     padding: 5px;
     margin: 5px 0 0 0;
@@ -104,14 +105,15 @@ input{font-size: 18px;padding: 10px;}
     border: 1px solid gray;
     display: flex;
     flex-direction: column;
-    width: 200px;
+    max-width: 200px;
+    min-width: 150px;
     align-content: center;
     align-items: center;
     }
 #item #img{
 flex:1;}
 #item #img img{
-    width: 200px;
+    width: 100%;
     }
 #item #title{
     text-align: center;
@@ -125,8 +127,30 @@ flex:1;}
     background-color: #32AFFF;
     }
 
-{% set mn = 0 %}
-    {% set mx = 0 %}
+@media screen and (min-width: 1024px) {
+    #price{
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media screen and (min-device-width: 768px) 
+    and (max-device-width: 1024px) {
+    #price{
+        grid-template-columns: repeat(4, 1fr);
+    }
+        #filter{
+            width: 30%;
+        }
+        #price{
+            width: 70%;
+        }
+}
+
+    #headr a{
+        text-decoration: none;
+        color: black;
+    }
+    
 </style>
 <body>
 <header>
@@ -147,7 +171,7 @@ flex:1;}
 <div id="search_bar">
    <h2>МАСЛЕНКА</h2>
    <form method="get" action=""><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
-   <a href="#">Заказ по VIN</a>
+   <a href="/vin">Заказ по VIN</a>
 </div>
 
 <div id='conteiner'>
@@ -176,24 +200,21 @@ flex:1;}
 <div id='price'>
     {% if products is defined  %}
         {% for product in products %}
-        {% if mn > product.cost %}
-            {% set mn = product.cost %}
-        {% endif %}
-        {% if mx < product.cost %}
-            {% set mx = product.cost %}
-        {% endif %}
+        
+        {%if product.amount >= 0%}
         <div id='item'>
             <div id='img'><img src="{{url_for('static', filename=product.photo_path)}}"></div>
             <div id='title'>{{product.title}}</div>
             <div id='cost'>{{product.cost}}</div>
             <a id='to_product' href="/price/{{product.id}}/">Перейти к товару</a>
         </div>
+        {%endif%}
         {% endfor %}
     {% else %}
     <div>Пока ничего...</div>
     {% endif %}
 </div>
-    </div>
+</div>
 <script>
     async function choice_cat(){
         var cat_list = document.getElementById('category');

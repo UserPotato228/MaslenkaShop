@@ -69,20 +69,16 @@ height: 80%;
 width: 100%;
 }
 
-#slider img{
-margin-left: auto;
-margin-right: auto;
-widht: 100%;
-height: 100%;
-}
+
 
 #bg_img{
-    background-image: url("{{url_for("static",filename = "oil.jpg")}}");
-background-repeat: no-repeat;
-background-size: cover;
-widht: 100%;
+width: 100%;
 height: 100%;
+overflow: hidden;
 }
+    #bg_img img{
+        width: 100%;
+    }
 
 #bg_txt{
 position: absolute;
@@ -150,6 +146,23 @@ display: flex;
 padding: 15px;
 justify-content: center;
 }
+    
+    #headr a{
+        color: black;
+        text-decoration: none;
+    }
+    #r0c0{
+        text-decoration: none;
+        color: black;
+    }
+    #r0c1{
+        text-decoration: none;
+        color: white;
+    }
+    #bg_txt a{
+        text-decoration: none;
+        color: white;
+    }
 </style>
 <body>
 <header>
@@ -169,27 +182,29 @@ justify-content: center;
 
 <div id="search_bar">
    <h2>МАСЛЕНКА</h2>
-   <form method="get" method="price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
-   <a href="#">Заказ по VIN</a>
+   <form method="get" action="/price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
+   <a href="/vin">Заказ по VIN</a>
 </div>
 
 <div id="slider">
-	<div id="bg_img"></div>
+	<div id="bg_img">
+        <img src="{{url_for('static', filename='oil.jpg')}}">
+    </div>
         <div id="bg_txt">Широкий ассортимент моторных масел для отечественных и импортных автомобилей.<a href="/price">Ознакомить с каталогом</a></div>
 </div>
 
 <div id="row0">
-	<a id="r0c0" href="/price" style="background-image: url('{{url_for("static",filename="CatalogIco.png")}}'); background-size: 100% 120%; background-position: center;"><div>Общий каталог</div></a>
-        <a id="r0c1" href="/price?category=1&subcategory=1" style="background-image: url('{{ url_for("static", filename="OilsIco.png") }}'); background-size: 200%; background-position: center;"><div>Моторные масла</div></a>
+	<a id="r0c0" href="/price" style="background-image: url('{{url_for('static',filename='CatalogIco.png')}}'); background-size: 100% 120%; background-position: center;"><div>Общий каталог</div></a>
+        <a id="r0c1" href="/price?category=1&subcategory=1" style="background-image: url('{{ url_for('static', filename='OilsIco.png') }}'); background-size: 200%; background-position: center;"><div>Моторные масла</div></a>
 </div>
 <div id="row0">
-	<a id="r0c1" style="color: white;background-image: url('{{url_for("static", filename="VinOrderIco.png") }}'); background-position: center; background-size: cover;"><div>Заказ по VIN</div></a>
-        <a id="r0c0" style="background-image: url('{{ url_for("static", filename="TehLiqIco.png") }}'); background-position: center; background-size: cover;"><div>Тех. Жидкости</div></a>
+	<a id="r0c1" href="/vin" style="color: white;background-image: url('{{url_for('static', filename='VinOrderIco.png') }}'); background-position: center; background-size: cover;"><div>Заказ по VIN</div></a>
+        <a id="r0c0" style="background-image: url('{{ url_for('static', filename='TehLiqIco.png') }}'); background-position: center; background-size: cover;"><div>Тех. Жидкости</div></a>
 </div>
 <div id="row0">
-	<a id="r0c0" style="background-image: url('{{url_for( "static", filename="filtersIco.png") }}'); background-position: center; background-size: cover;"><div>Фильтра</div></a>
-        <a id="r0c0" style="background-image: url('{{url_for("static", filename="LampIco.png" )}}'); background-position: center; background-size: cover;)"><div>Лампы</div></a>
-        <a id="r0c0" style="background-image: url('{{ url_for("static", filename="AcsIco.png") }}'); background-position: center; background-size: cover;"><div>Аксессуары</div></a>
+	<a id="r0c0" style="background-image: url('{{url_for( 'static', filename='filtersIco.png') }}'); background-position: center; background-size: cover;"><div>Фильтра</div></a>
+        <a id="r0c0" style="background-image: url('{{url_for('static', filename='LampIco.png' )}}'); background-position: center; background-size: cover;)"><div>Лампы</div></a>
+        <a id="r0c0" style="background-image: url('{{ url_for('static', filename='AcsIco.png') }}'); background-position: center; background-size: cover;"><div>Аксессуары</div></a>
 </div>
 <footer>
 <ul>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Чек №{{info['id']}} от {{info['datetime']}}</title>
+</head>
+<style>
+    #wrapper{
+        width: 60%;
+        margin: 0 auto;
+    }
+    
+    header{
+        width: 100%;
+    }
+    header h1{
+        width: 100%;
+        
+        text-align: center;
+    }
+    #row{
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+    #row #row_left{
+        width: 50%;
+    }
+    #row #row_right{
+        width: 50%;
+        text-align: right;
+    }
+    
+    table {
+        width: 100%;
+        border-top: 2px solid gray;
+        border-bottom: 2px solid gray;
+    }
+    table tr{
+        text-align: left;
+    }
+    table th{
+        border-bottom: 2px solid gray;
+    }
+</style>
+<body>
+    <div id="wrapper">
+        <header>
+            <h1>Чек №{{info['id']}} от {{info['datetime']}}</h1>
+            <div id="row"><div id="row_left">ИП Долин Сергей Петрович</div><div id="row_right">ИНН ХХХХХХХХХХХХ</div></div>
+            <div id="row"><div id="row_left">Дата покупки</div><div id="row_right">{{info['datetime']}}</div></div>
+            {%if prof%}
+                <div id="row"><div id="row_left">Номер покупателя</div><div id="row_right">{{prof.phone_num}}</div></div>
+                <div id="row"><div id="row_left">EMail покупателя</div><div id="row_right">{{prof.email}}</div></div>
+            {%endif%}
+        </header>
+        <table>
+            <tr>
+                <th>Наименование</th>
+                <th style="width: 15%;">Цена за шт.</th>
+                <th style="width: 15%;">Кол-во</th>
+                <th style="width: 15%;">Итого</th>
+            </tr>
+            {%for i in info['products']%}
+            <tr>
+                <td>{{i['title']}}</td>
+                <td>{{i['cost']}}</td>
+                <td>{{i['amount']}}</td>
+                <td>{{i['total']}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+        <footer>
+            <div id="row"><div id="row_left">Итого:</div><div id="row_right">{{total}}</div></div>
+            <div id="row"><div id="row_left">Способ Оплаты:</div><div id="row_right">{{info['ct']}}</div></div>
+        </footer>
+    </div>
+</body>
+</html>

@@ -120,6 +120,7 @@ flex-direction: column;
     }
     
 #cart_item{
+    margin: 5px;
     border: 1px solid gray;
     border-radius: 5px;
     padding: 10px;
@@ -141,28 +142,125 @@ flex-direction: column;
     margin: 5px;
     font-size: 16px;
     }
+    
+#form{
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+#form h2{
+    color: white;
+    border-bottom: 1px solid white;
+    background-color: #32AFFF;
+    width: 100%;
+    margin: 0 0 10px 0;
+    padding: 15px;
+    text-align: center;
+}
+#form input{
+    font-size: 18px;
+    margin: 0 10px 10px 10px;
+}
+#form input[type="submit"]
+{
+    padding: 5px;
+    color: white;
+    border-radius: 5px;
+    border: 0;
+    background-color: #32AFFF;
+    width: 50%;
+}
+    #form input[type='button']{
+        padding: 5px;
+    color: white;
+    border-radius: 5px;
+    border: 0;
+    background-color: red;
+    width: 50%;
+    }
+    
+    #edit_block{position: absolute; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);
+    visibility: hidden;
+    }
+
 </style>
 <script>
     
     
     var selected_ = [];
+    var fullname = '{{profile.fullname}}';
+    var login = '{{profile.login}}'
+    var phone_num = '{{profile.phone_num}}';
+    var email = '{{profile.email}}';
     
-    function delete_item(id_){
+    
+    function delete_item(id_s = null){
+        
+    let data = [];
+    if(id_s){
+       alert("first")
+       data = [{id : id_s}];
+       }
+    else{
+        alert("second");
+       for(var i = 0; i < selected_; i++){
+           if(selected_[i]) {
+            data.push({id:selected_[i]})
+        }
+    }}
+       
     let xhr = new XMLHttpRequest();
-    xhr.open("POST", "del");
+    xhr.open("POST", "/profile/del_cart");
     xhr.setRequestHeader("Accept", "application/json");
     xhr.setRequestHeader("Content-Type", "application/json");
 
-    let data = {id : id_};
+    
     let json = JSON.stringify(data);
-
+    console.log(data);
+        
     xhr.send(json);
 
-    location.reload();
+    xhr.onload = function() {
+    if (xhr.status != 200) { // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+        alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+    } else { // если всё прошло гладко, выводим результат
+        alert(`Удалено`); // response -- это ответ сервера
+        location.reload();
+    }
+    };
+        
+    xhr.onerror = function() { // происходит, только когда запрос совсем не получилось выполнить
+        alert(`Ошибка соединения`);
+    };
+        
+  
     }
     
 </script>
 <body>
+    <div id="edit_block" >
+    <form id="form" method="post">
+        <h2>Редактирование</h2>
+            <input type="text" id="fln_inp" name="fullname" placeholder="Ф.И.О.">
+            <input type="text" id="log_inp" name="login" placeholder="Логин*">
+            <input type="text" id="ph_inp" name="phone" placeholder="Номер Телефона*">
+            <input type="text" id="em_inp" name="email" placeholder="Эл. Почта">
+            
+            <input type="text" name="old_password" placeholder="Старый Пароль*(Подтверждение)">
+            <input type="text" name="new_password" placeholder="Новый Пароль">
+        <div style="display: flex; flex-direction: row;"><input type="submit" value="Применить"><input id="cls_ed_bl" type="button" value='Закрыть'></div>
+    </form>
+    </div>
+    
     <header>
    <div id="headl">
       <h4>Адрес</h4>
@@ -173,7 +271,7 @@ flex-direction: column;
 <div id="search_bar">
    <h2>МАСЛЕНКА</h2>
    <form method="get" method="price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
-   <a href="#">Заказ по VIN</a>
+   <a href="/vin">Заказ по VIN</a>
 </div>
 <div id='wrapper'>
     <div id='prof_info'>
@@ -190,7 +288,7 @@ flex-direction: column;
         Корзина: 
         <div id='bt_block' style="visibility: hidden;">
             <button id='edit_bt' onclick="create_order()">Заказать выбраное</button>
-            <button id='delitem_bt' onclick="delete_items()">Удалить выбраное</button>
+            <button id='delitem_bt' onclick="delete_item()">Удалить выбраное</button>
         </div>
         
         <div id='cart_cap' id='cart_cap'>
@@ -199,17 +297,29 @@ flex-direction: column;
             <div id='cart_item'>
                 <input type="checkbox" id='cart_item_checkbox' name='cart_item' value="{{item['id']}}">
                 <div id='item_title'>{{item['title']}}</div>
-                <div id='item_amount'>Кол-во: {{item['amount']}} шт.</div>
+                {%if item['total_amount'] <= item['amount']%}
+                <div id='item_amount'>Кол-во товара изменилось. Осталось: {{item['total_amount']}} шт.</div>
+                {%else%}
+                <div id='item_amount'>Кол-во: {{item['amount']}} шт.</div>                                 
+                {%endif%}
+                
                 <div id='item_cost'>Стоимость: {{item['cost']}} РУБ</div>
                 <div>
-                    <button id='delitem_bt' onclick="delete_item({{item['id']}})">Удалить</button>
-                    <button id='edit_bt' onclick="create_order({{item['id']}})">Заказать</button>
+                    <button {%if item['total_amount'] <= 0%}disabled{%endif%} id='delitem_bt' onclick="delete_item({{item['id']}})">Удалить</button>
+                    <button id='edit_bt' onclick="create_order({{item['id']}})">
+            
+                {%if item['total_amount'] <= item['amount']%}
+                Все равно заказать
+                {%else%}
+                Заказать
+                {%endif%}
+            </button>
                 </div>
             </div>
             {%endfor%}
             {%else%}
             <div id='cart_item'>
-                Пусто.. <a href='/price'>Перейти к покупкам</a>
+                Пусто.. <a href='/price' style='color: #32AFFF;'>Перейти к покупкам</a>
             </div>
             {%endif%}
             
@@ -221,11 +331,21 @@ flex-direction: column;
              {%if orders%}
             {%for item in orders%}
             <div id='cart_item'>
-                <div id='item_title'>Номер заказа: {{item.id}}</div>
-                <div id='item_title'>Статус: {{item.status}}</div>
+                <div id='item_title'>Номер заказа: {{item['id']}}</div>
+                <div id='item_title'>Статус: {{item['status']}}</div>
+                <div id='item_title'>Итого: {{item['total']}}</div>
                 <div>
-                    <button id='delitem_bt' onclick="delete_item({{item['id']}})">Удалить</button>
-                    <button id='edit_bt' onclick="create_order({{item['id']}})">Перейти к заказу</button>
+                    <button id='delitem_bt' onclick="delete_order({{item['id']}})">Удалить</button>
+                </div>
+                <div style="margin: 5px; border-radius: 5px; border: 1px solid black;">
+                    {%for elem in item['records']%}
+                    <div style="border-bottom: 1px solid black; padding: 3px;">
+                        <div>{{elem['title']}}</div>
+                        
+                        <div>Кол-во: {{elem['amount']}}</div>
+                        <div>С учетом кол-ва: {{elem['cost']}}</div>
+                    </div>
+                    {%endfor%}
                 </div>
             </div>
             {%endfor%}
@@ -238,12 +358,52 @@ flex-direction: column;
     </div>
 </div>
 <script>
+    document.getElementById('edit_bt').onclick = function(){
+    document.getElementById('edit_block').style.visibility = 'visible';
+    document.getElementById('fln_inp').value = fullname;
+    document.getElementById('log_inp').value = login;
+    document.getElementById('ph_inp').value = phone_num;
+    document.getElementById('em_inp').value = email;
+    } 
+    
+    document.getElementById('cls_ed_bl').onclick = function(){
+    document.getElementById('edit_block').style.visibility = 'hidden';
+    } 
+    
+    function delete_order(item_id){
+    let data = {id : item_id}  
+    
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/profile/del_order");
+    xhr.setRequestHeader("Accept", "application/json");
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    
+    let json = JSON.stringify(data);
+    console.log(data);
+        
+    xhr.send(json);
+
+    xhr.onload = function() {
+    if (xhr.status != 200) { // анализируем HTTP-статус ответа, если статус не 200, то произошла ошибка
+        alert(`Ошибка ${xhr.status}: ${xhr.statusText}`); // Например, 404: Not Found
+    } else { // если всё прошло гладко, выводим результат
+        alert(`Удалено`); // response -- это ответ сервера
+        location.reload();
+    }
+    };
+        
+    xhr.onerror = function() { // происходит, только когда запрос совсем не получилось выполнить
+        alert(`Ошибка соединения`);
+    };
+        
+    }
+    
     function create_order(item_id){
         item_id = typeof item_id !== 'undefined' ? item_id : null;
         var json_string = "";
         var json = [];
         if(item_id==null){
-            alert('first');
             for(var i = 0;i<selected_.length;i++){
                 json.push({id:selected_[i]});
             }
@@ -251,7 +411,6 @@ flex-direction: column;
             
         }
         else{
-            alert('secodn');
             json_string = JSON.stringify([{id:item_id}]);
         }
         location.href=encodeURI('/order?items='+json_string);
