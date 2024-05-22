@@ -29,6 +29,11 @@
     #search_bar input[type="button"]{
         width: 20%;
         padding: 5px;
+        border: none;
+        font-size: 18px;
+        font-weight: 600;
+        background: #32AFFF;
+        color: white;
     }
     #left select{
         width: 100%;
@@ -59,7 +64,6 @@
     
     #sell{
         flex: 1; 
-        background-color: gray;
         display: flex;
         flex-direction: column;
         
@@ -71,8 +75,12 @@
         font-size: 22px;
     }
     #sell input{
+        border: none;
+        color: white;
+            background: #32AFFF;
+        font-weight: 600;
         font-size: 22px;
-        padding: 5px;
+        padding: 10px;
         width: 100%;
     }
     
@@ -92,8 +100,19 @@
         font-size: 22px;
     }
     
+    #right label{
+        padding: 5px;
+    }
     
+    #change{
+        padding: 5px;
+    }
     
+    #del_pos{
+        border: none;
+        color: white;
+        background-color: red;
+    }
     
 </style>
 <script>
@@ -104,7 +123,7 @@ var products = [];
         <div id="block">
         <div id="left">
             <div id='search_bar'>
-                <input id="article" type="text">
+                <input id="article" type="text" placeholder="Поиск по артиклю">
                 <input onclick="get_product()" type=button value="Добавить">
             </div>
             <select id="products_list" size="15" onchange="select_product()">
@@ -126,7 +145,7 @@ var products = [];
             </div>
         <div id="bottom_block">
             <input id="amount" placeholder="Количество в поз." onchange="change_amount()">
-            <input type="button" value="Удалить поз." onclick="delete_item()">
+            <input id="del_pos" type="button" value="Удалить поз." onclick="delete_item()">
         </div>
     </div>    
 </body>

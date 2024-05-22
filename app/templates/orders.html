@@ -4,40 +4,74 @@
 </head>
 <style>
     #wrapper{
+        background-color: #32AFFF;
         width: 60%;
         margin: 0 auto;
+        border-radius: 5px;
+        border: 1px solid black;
+        box-shadow: 2px 3px 13px -5px rgba(0,0,0,0.75);
     }
     #orders{
+        background-color: white;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
+        justify-items: stretch;
+        align-content: stretch;
+        align-items: stretch;
+        margin: 10px;
+        border-radius: 5px;
+        overflow: hidden;
     }
     .item{
-        width: 90%;
-        border: 1px solid black;
+        border-bottom: 1px solid black;
         
         padding: 5px;
-    }
-    .info{
-        
     }
     
     .order_items{
         border: 1px solid black;
+        border-radius: 5px;
+        padding: 5px;
+    }
+    
+    #order_item{
+        border-bottom: 1px solid black;
+    }
+    div{
+        font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Helvetica, roboto, arial;
+font-weight: 700;
+letter-spacing: .4px;
+    }
+    h1{
+        font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Helvetica, roboto, arial;
+font-weight: 700;
+letter-spacing: .4px;
+line-height: 30px;
+        padding-left: 15px;
+        color: white;
+    }
+    button{
+        margin-top: 5px;
+        color: white;
+        background-color: #32AFFF;
+        border-radius: 5px;
+        font-weight: 600;
+        padding: 5px;
+        border: none;
+        font-size: 18px;
     }
 </style>
 <body>
     <div id="wrapper">
-        <div><h1>Заказы</h1></div>
-        <hr>
+        <div><h1 >Заказы</h1></div>
         <div id="orders">
             {% for order in orders %}
             <div class="item">
                 
-                <div class='order_num'>ORDER NUM : {{ order['id'] }}</div>
-                <div class='total_sum'>{{ order['total'] }} rub.</div>
-                <div>STATUS: {{order['status']}}</div>
+                <div class='order_num'>Номер заказа: {{ order['id'] }}</div>
+                <div class='total_sum'>Итого: {{ order['total'] }} rub.</div>
+                <div>Статус заказа: {{order['status']}}</div>
                 {%if order['status'] == "В процессе" %}
                 <div class="btns"><button onclick="make_done({{order['id']}})">Готово</button></div>
                 {%else%}
@@ -45,6 +79,7 @@
                 {%endif%}
                 <div class="list_head">Детали:</div>
                 <div class="order_items">
+                {%if order['records']%}
                     {% for product in order['records'] %}
                     <div id="order_item">
                         <div>{{product['title']}}</div>
@@ -52,6 +87,9 @@
                         <div>{{product['cost']}}</div>
                     </div>
                     {%  endfor %}
+                {%else%}
+                    <div>Пока ничего нет...</div>
+                {%endif%}
                 </div>
             </div>
             {% endfor %}

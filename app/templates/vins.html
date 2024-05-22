@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title></title>
+        <title>Заказы по VIN</title>
     </head>
     <style>
         #wrapper{
@@ -14,9 +14,18 @@
             border-radius: 5px;
         }
         #wrapper h1{
+            font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Helvetica, roboto, arial;
+font-weight: 700;
+letter-spacing: .4px;
+line-height: 30px;
+            padding: 5px;
             color: white;
             width: 100%;
             margin: 5px;
+        }
+        
+        div{
+            font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Helvetica, roboto, arial;
         }
         
         #container{
@@ -51,13 +60,13 @@
             <div id="container">
                 {%for rec in recs%}
                 <div id="item">
-                    <div>{{rec['phone_num']}}</div>
+                    <div>Номер заказчика:{{rec['phone_num']}}</div>
                     {%if rec['email']%}
-                        <div>{{rec['email']}}</div>
+                        <div>EMail: {{rec['email']}}</div>
                     {%endif%}
-                    <div>{{rec['vin']}}</div>
+                    <div>VIN: {{rec['vin']}}</div>
               
-                    <div>{{rec['message']}}</div>
+                    <div style="word-wrap: break-word;">Сообщение: {{rec['message']}}</div>
               
                     <div><button onclick='set_done({{rec["id"]}})'>Готово</button></div>
                 </div>

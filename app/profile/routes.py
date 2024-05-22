@@ -114,6 +114,10 @@ def delete_order():
 
     order_id = request.json.get('id')
 
+    for item in db.session.query(Order_Record).filter(Order_Record.order_id == order_id).all():
+        amount = db.session.query(Product.amount).filter(Product.id == item.product_id).first()[0]
+        db.session.query(Product).filter(Product.id == item.product_id).update({'amount':amount+item.amount})
+    
     db.session.delete(Orders.query.filter((Orders.user_id == user_id) & (Orders.id == order_id)).one())
     db.session.commit()
 

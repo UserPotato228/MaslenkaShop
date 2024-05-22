@@ -49,7 +49,13 @@ def order():
             items_arr.append(db.session.query(Cart).filter(Cart.id == item['id']).first())
             Cart.query.filter(Cart.id == item['id']).one()
         for item in items_arr:
+            # get cart item
             cart_item = db.session.query(Product).filter(Product.id == item.product_id).first()
+            # get curr amount 
+            amount = db.session.query(Product.amount).filter(Product.id == item.product_id).first()[0]
+            # calculate new amount
+            db.session.query(Product).filter(Product.id == item.product_id).update({"amount":amount-item.amount})
+            db.session.commit()
             if cart_item.amount < item.amount: db.session.add(Order_Record(order_id=max_order_num, product_id=item.product_id, amount=cart_item.amount))
             else: db.session.add(Order_Record(order_id=max_order_num, product_id=item.product_id, amount=item.amount))
             db.session.commit()

@@ -6,12 +6,14 @@
     #wrapper{
         width: 60%;
         
+        padding: 5px;
         margin: 0 auto;
         
         display: flex;
         flex-direction: column;
         align-items: center;
         
+        border-radius: 5px;
         border: solid black 1px;        
     }
     
@@ -128,6 +130,12 @@
         padding: 5px;
        
     }
+    
+    #delete_bt{
+        background-color: red;
+        color: white;
+        border: none;
+    }
 </style>
 <body>
     <div id="wrapper">
@@ -174,7 +182,7 @@
                     <input id="cst_inp" type="text" placeholder="Стоимость*"><input id="amnt_inp" type="text" placeholder="Количество*">
                 </div>   
                 <div id="btns">
-                    <button onclick="check_method()">Добавить/Обновить</button> <button>Удалить</button>
+                    <button id="add_bt" onclick="check_method()">Добавить/Обновить</button> <button id="delete_bt">Удалить</button>
                 </div>
             </div>
             
