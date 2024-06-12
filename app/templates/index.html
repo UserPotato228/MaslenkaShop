@@ -1,10 +1,15 @@
-
-<html>
-<head>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Масленка : Главная страница</title>
-</head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{margin: 0;}
+body{
+  background-color: #ebebeb;
+}
+header{
+  background-color: white;
+}
 #headl{
    flex-grow: 1;
    display: flex;
@@ -112,7 +117,7 @@ text-shadow: 0px 0px 0px rgba(0,0,0,0);
 width: 70%;
 margin: 0 auto;
 display: flex;
-height: 30%;
+height: 500px;
 font-size: 18px;
 
 justify-items: center;
@@ -128,6 +133,10 @@ align-items: center;
 font-weight: 600;
 letter-spacing: 2;
 font-size: 24px;
+height: 500px;
+}
+#r0c0{
+
 }
 
 #r0c1{
@@ -163,7 +172,107 @@ justify-content: center;
         text-decoration: none;
         color: white;
     }
+
+@media only screen and (max-width: 768px) {
+  html{
+	overflow-x: hidden;
+	}
+  body{
+	overflow-x: hidden;
+	}
+
+  #r0c0{
+	height: 300px;
+	background-size: cover;
+	}
+  #r0c1{
+	height: 200px;
+	}
+  #slider{
+	height: 50%;
+	}
+  #bg_img img{
+	height: 100%;
+	}
+  #bg_txt{
+	width: 90%;
+	transform: translate(-50%, -50%);
+	}
+  #headr a{
+	height: 100%;
+ }
+  #headr{
+        height: 100%;
+        align-items: center;
+	justify-content: center;
+	justify-items: center;
+	}
+  #search_bar a{
+	display: none;
+	}
+  #search_bar{
+	display: flex;
+	flex-direction: column;
+	padding: 5px;
+	}
+  #row0{
+	width: 100%;
+	display: flex;
+	height: auto;
+	flex-direction: column;
+	}
+
+}
+
+
+  #wrapper{
+  
+	font-family: -apple-system, system-ui, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, sans-serif, Helvetica Neue, Helvetica, roboto, arial;
+
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  }
+  #row_{
+  margin: 5px;
+  width: 100%;
+  height: 250px;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  }
+  #list_{
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: white;
+  width: 25%;
+  }
+  .list_item{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;margin-top: auto;
+  margin-bottom: auto;
+  height: 100%;
+  padding: 5px;
+  border-top: 1px solid #d4d4d4;
+  }
+  #oil_img{  
+  border-radius: 5px;
+  margin: 10px;
+  overflow: hidden;
+  }
+  #oil_img img{
+  width: 100%;
+  height: 100%;
+  }
 </style>
+</head>
+
 <body>
 <header>
    <div id="headl">
@@ -171,41 +280,63 @@ justify-content: center;
       <h4>xxxx-xxx-xx-xx</h4>
    </div>
    <div id="headr">
-       {% if profile %}
-        <a href="/profile/{{profile[0]}}/">Профиль</a>
-       {% else %}
-        <a href="registration">Регистрация</a>
-        <a href="login">Вход</a>
-       {% endif %}
+       
+        <a href="http://augustkortoshkin201991.fvds.ru/registration">Регистрация</a>
+        <a href="http://augustkortoshkin201991.fvds.ru/login">Вход</a>
+       
    </div>
 </header>
 
 <div id="search_bar">
    <h2>МАСЛЕНКА</h2>
    <form method="get" action="/price"><input type="text" name="search" placeholder="Поиск по сайту"><input type="submit" value="Поиск"></form>
-   <a href="/vin">Заказ по VIN</a>
 </div>
 
 <div id="slider">
 	<div id="bg_img">
-        <img src="{{url_for('static', filename='oil.jpg')}}">
+        <img src="%D0%9C%D0%B0%D1%81%D0%BB%D0%B5%D0%BD%D0%BA%D0%B0%20%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F%20%D1%81%D1%82%D1%80%D0%B0%D0%BD%D0%B8%D1%86%D0%B0_files/oil.jpg">
     </div>
-        <div id="bg_txt">Широкий ассортимент моторных масел для отечественных и импортных автомобилей.<a href="/price">Ознакомить с каталогом</a></div>
+        <div id="bg_txt">Широкий ассортимент моторных масел для отечественных и импортных автомобилей.<a href="http://augustkortoshkin201991.fvds.ru/price">Ознакомиться с каталогом</a></div>
 </div>
 
-<div id="row0">
-	<a id="r0c0" href="/price" style="background-image: url('{{url_for('static',filename='CatalogIco.png')}}'); background-size: 100% 120%; background-position: center;"><div>Общий каталог</div></a>
-        <a id="r0c1" href="/price?category=1&subcategory=1" style="background-image: url('{{ url_for('static', filename='OilsIco.png') }}'); background-size: 200%; background-position: center;"><div>Моторные масла</div></a>
+<div id='wrapper'>
+  <div id='row_'>
+    <div id='oil_img' style='width: 30%;position: relative;'>
+      <div style='position: absolute; color: black; z-index: 500; left: 50%; transform: translate(-50%, 0); padding: 10px;'>Общий каталог</div>
+      <img src='filter.png'>
+    </div>
+    <div id='oil_img' style='width: 55%; position: relative;'>
+      <div style='position: absolute;color: black; z-index: 500; left: 50%; transform: translate(-50%, 0); padding: 10px;'>Моторные масла</div>
+      <img src='OilBar.png'>
+    </div>
+    <div id="list_">
+      <div class='list_item'>Масла для АКПП</div>
+      <div class='list_item'>Масла для МКПП</div>
+      <div class='list_item'>Масла для 2Т двигателей</div>
+      <div class='list_item'>Масла для лодочных двигателей</div>
+      <div class='list_item'>Технические масла</div>
+    </div>
+    </div>
+    <div id='row_'>
+      <div id="list_">
+        <div class='list_item'>Антифриз</div>
+        <div class='list_item'>Охлаждающая жидкость</div>
+        <div class='list_item'>Омывающая жидкость</div>
+        <div class='list_item'>Жидкость гур</div>
+        <div class='list_item'>Жидкость AdBlue</div>
+      </div>
+      <div id='oil_img' style='width: 30%; position: relative;padding: 5px 10px 5px 10px; background-color: white;'>
+        <div style='position: absolute; color: black; z-index: 500; left: 50%; transform: translate(-50%, 0); padding: 10px; width: 100%; text-align: center;'>Технические жидкости</div>
+        <img style='width: 80%; margin: 0 auto;' src='specfluids.png'>  
+      </div>
+      <div id='oil_img' style='width: 55%; position: relative; background-color: white;'>
+        <div style='position: absolute; color: black; z-index: 500; left: 50%; transform: translate(-50%, 0); padding: 10px;'>Аксессуары</div>
+        <img src='brush.png'>
+      </div>
+      
+  </div>
 </div>
-<div id="row0">
-	<a id="r0c1" href="/vin" style="color: white;background-image: url('{{url_for('static', filename='VinOrderIco.png') }}'); background-position: center; background-size: cover;"><div>Заказ по VIN</div></a>
-        <a id="r0c0" style="background-image: url('{{ url_for('static', filename='TehLiqIco.png') }}'); background-position: center; background-size: cover;"><div>Тех. Жидкости</div></a>
-</div>
-<div id="row0">
-	<a id="r0c0" style="background-image: url('{{url_for( 'static', filename='filtersIco.png') }}'); background-position: center; background-size: cover;"><div>Фильтра</div></a>
-        <a id="r0c0" style="background-image: url('{{url_for('static', filename='LampIco.png' )}}'); background-position: center; background-size: cover;)"><div>Лампы</div></a>
-        <a id="r0c0" style="background-image: url('{{ url_for('static', filename='AcsIco.png') }}'); background-position: center; background-size: cover;"><div>Аксессуары</div></a>
-</div>
+
 <footer>
 <ul>
 Контактная информация:
@@ -216,5 +347,5 @@ justify-content: center;
 <li>example324@mail.ru</li>
 </ul>
 </footer>
-</body>
-</html>
+
+</body></html>
